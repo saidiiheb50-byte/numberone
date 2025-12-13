@@ -17,6 +17,7 @@ const formatPrice = (value: number) =>
 function App() {
   const [showSplash, setShowSplash] = useState(true)
   const [showOrderPanel, setShowOrderPanel] = useState(false)
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null)
   const [cart, setCart] = useState<CartState>({})
   const [serviceType, setServiceType] = useState<ServiceType>('pickup')
   const [customer, setCustomer] = useState({
@@ -109,50 +110,84 @@ function App() {
     el?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  const renderSection = (title: string, category: MenuItem['category']) => {
+  const renderCategoryHero = (
+    title: string,
+    category: MenuItem['category'],
+    image: string,
+    categoryKey: string,
+  ) => {
     const items = menuItems.filter((item) => item.category === category)
+    const minPrice = Math.min(...items.map((item) => item.price))
+    const maxPrice = Math.max(...items.map((item) => item.price))
+    const isExpanded = expandedCategory === categoryKey
+
+    const toggleExpand = (e: React.MouseEvent) => {
+      e.stopPropagation()
+      setExpandedCategory(isExpanded ? null : categoryKey)
+    }
 
     return (
-      <section className="menu-section">
-        <div className="section-header">
-          <div>
-            <p className="eyebrow">Notre sélection</p>
-            <h2>{title}</h2>
+      <div className={`category-hero-card ${isExpanded ? 'expanded' : ''}`}>
+        <div className="category-hero-image" onClick={toggleExpand}>
+          <img src={image} alt={title} loading="lazy" />
+          <div className="category-hero-overlay" />
+          {!isExpanded && (
+            <div className="category-hero-preview">
+              <h2>{title}</h2>
+              <p className="category-hero-price-preview">
+                À partir de {formatPrice(minPrice)}
+                {minPrice !== maxPrice && ` - ${formatPrice(maxPrice)}`}
+              </p>
+              <span className="category-hero-cta">Cliquez pour voir le menu</span>
+            </div>
+          )}
+        </div>
+        {isExpanded && (
+          <div className="category-hero-content">
+            <div className="category-hero-header">
+              <h2>{title}</h2>
+              <button className="ghost-btn" onClick={toggleExpand}>
+                Fermer
+              </button>
+            </div>
+            <p className="category-hero-price">
+              {items.length} choix disponibles • À partir de {formatPrice(minPrice)}
+              {minPrice !== maxPrice && ` - ${formatPrice(maxPrice)}`}
+            </p>
+            <div className="category-hero-items">
+              {items.map((item) => (
+                <div key={item.id} className="category-item">
+                  <div className="category-item-info">
+                    <h4>{item.name}</h4>
+                    <p className="category-item-desc">{item.description}</p>
+                    {item.badges && (
+                      <div className="category-item-badges">
+                        {item.badges.map((badge) => (
+                          <span key={badge} className="badge">
+                            {badge}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="category-item-actions">
+                    <span className="price">{formatPrice(item.price)}</span>
+                    <button
+                      className="primary-btn"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        addToCart(item)
+                      }}
+                    >
+                      Ajouter
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <span className="count-badge">{items.length} choix</span>
-        </div>
-        <div className="cards-grid">
-          {items.map((item) => (
-            <article key={item.id} className="card">
-              <div className="card-media">
-                <img src={item.image} alt={item.name} loading="lazy" />
-                <div className="badges">
-                  {item.badges?.map((badge) => (
-                    <span key={badge} className="badge">
-                      {badge}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div className="card-body">
-                <div className="card-title-row">
-                  <h3>{item.name}</h3>
-                  <span className="price">{formatPrice(item.price)}</span>
-                </div>
-                <p className="card-desc">{item.description}</p>
-                <div className="card-actions">
-                  <button className="ghost-btn" onClick={scrollToMenu}>
-                    Détails
-                  </button>
-                  <button className="primary-btn" onClick={() => addToCart(item)}>
-                    Ajouter
-                  </button>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+        )}
+      </div>
     )
   }
 
@@ -256,14 +291,22 @@ function App() {
               <p className="eyebrow">Commander en ligne</p>
               <h2>Choisissez, ajoutez au panier, envoyez</h2>
             </div>
-            <div className="menu-legend">
-              <span className="dot primary-dot" />
-              <p>Sandwichs libanais & pizzas prêtes à être préparées.</p>
-            </div>
           </div>
 
-          {renderSection('Sandwichs Libanais', 'sandwich')}
-          {renderSection('Pizzas artisanales', 'pizza')}
+          <div className="category-hero-grid">
+            {renderCategoryHero(
+              'Fast Food',
+              'sandwich',
+              'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=1200&q=80',
+              'fastfood'
+            )}
+            {renderCategoryHero(
+              'Plats',
+              'pizza',
+              'https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?auto=format&fit=crop&w=1200&q=80',
+              'plats'
+            )}
+          </div>
         </section>
       </main>
 
