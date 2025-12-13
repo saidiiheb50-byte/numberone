@@ -2,7 +2,17 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 import { menuItems, type MenuItem } from './data/menu'
 
-type CartState = Record<string, number>
+type CartItemOptions = {
+  sauce: boolean
+  fries: boolean
+}
+
+type CartItem = {
+  quantity: number
+  options: CartItemOptions
+}
+
+type CartState = Record<string, CartItem>
 type ServiceType = 'pickup' | 'delivery'
 
 const restaurantPhone = '+21650123456'
@@ -25,17 +35,25 @@ function App() {
     phone: '',
     note: '',
   })
+  const [optionsModal, setOptionsModal] = useState<{
+    item: MenuItem | null
+    options: CartItemOptions
+  } | null>(null)
   const orderPanelRef = useRef<HTMLDivElement | null>(null)
 
   const cartLines = useMemo(
     () =>
       menuItems
         .filter((item) => cart[item.id])
-        .map((item) => ({
-          item,
-          quantity: cart[item.id],
-          lineTotal: item.price * cart[item.id],
-        })),
+        .map((item) => {
+          const cartItem = cart[item.id]
+          return {
+            item,
+            quantity: cartItem.quantity,
+            options: cartItem.options,
+            lineTotal: item.price * cartItem.quantity,
+          }
+        }),
     [cart],
   )
 
@@ -52,26 +70,66 @@ function App() {
     }
   }, [cartLines.length])
 
-  const addToCart = (item: MenuItem) => {
-    setCart((prev) => ({
-      ...prev,
-      [item.id]: (prev[item.id] ?? 0) + 1,
-    }))
+  const openOptionsModal = (item: MenuItem) => {
+    setOptionsModal({
+      item,
+      options: {
+        sauce: false,
+        fries: false,
+      },
+    })
+  }
+
+  const confirmAddToCart = () => {
+    if (!optionsModal?.item) return
+
+    const item = optionsModal.item
+    const options = optionsModal.options
+
+    setCart((prev) => {
+      const existing = prev[item.id]
+      if (existing) {
+        return {
+          ...prev,
+          [item.id]: {
+            quantity: existing.quantity + 1,
+            options: existing.options, // Keep existing options for simplicity
+          },
+        }
+      }
+      return {
+        ...prev,
+        [item.id]: {
+          quantity: 1,
+          options,
+        },
+      }
+    })
+
     setShowOrderPanel(true)
+    setOptionsModal(null)
     requestAnimationFrame(() => {
       orderPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     })
   }
 
+  const addToCart = (item: MenuItem) => {
+    openOptionsModal(item)
+  }
+
   const updateQuantity = (id: string, delta: number) => {
     setCart((prev) => {
-      const current = prev[id] ?? 0
-      const next = Math.max(0, current + delta)
+      const current = prev[id]
+      if (!current) return prev
+      const next = Math.max(0, current.quantity + delta)
       const updated = { ...prev }
       if (next === 0) {
         delete updated[id]
       } else {
-        updated[id] = next
+        updated[id] = {
+          ...current,
+          quantity: next,
+        }
       }
       return updated
     })
@@ -81,10 +139,13 @@ function App() {
     if (cartLines.length === 0) return
 
     const lines = cartLines
-      .map(
-        ({ item, quantity, lineTotal }) =>
-          `- ${item.name} x${quantity} (${formatPrice(lineTotal)})`,
-      )
+      .map(({ item, quantity, lineTotal, options }) => {
+        const extras = []
+        if (options.sauce) extras.push('Sauce')
+        if (options.fries) extras.push('Frites')
+        const extrasText = extras.length > 0 ? ` [${extras.join(', ')}]` : ''
+        return `- ${item.name} x${quantity}${extrasText} (${formatPrice(lineTotal)})`
+      })
       .join('\n')
 
     const header = `Nouvelle commande Number One`
@@ -107,6 +168,11 @@ function App() {
 
   const scrollToMenu = () => {
     const el = document.getElementById('menu')
+    el?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const scrollToAbout = () => {
+    const el = document.getElementById('about')
     el?.scrollIntoView({ behavior: 'smooth' })
   }
 
@@ -157,6 +223,9 @@ function App() {
             <div className="category-hero-items">
               {items.map((item) => (
                 <div key={item.id} className="category-item">
+                  <div className="category-item-image">
+                    <img src={item.image} alt={item.name} loading="lazy" />
+                  </div>
                   <div className="category-item-info">
                     <h4>{item.name}</h4>
                     <p className="category-item-desc">{item.description}</p>
@@ -213,6 +282,9 @@ function App() {
           </div>
         </div>
         <div className="topbar-actions">
+          <button className="ghost-btn" onClick={scrollToAbout}>
+            À propos de nous
+          </button>
           <button className="ghost-btn" onClick={() => (window.location.href = `tel:${restaurantPhone}`)}>
             Appeler
           </button>
@@ -308,6 +380,50 @@ function App() {
             )}
           </div>
         </section>
+
+        <section id="about" className="about-section">
+          <div className="about-container">
+            <div className="about-content">
+              <p className="eyebrow">À propos de nous</p>
+              <h2>Number One, l'excellence culinaire à Tunis</h2>
+              <div className="about-text">
+                <p>
+                  Depuis notre ouverture, <strong>Number One</strong> s'engage à vous offrir une expérience
+                  gastronomique exceptionnelle. Spécialisés dans les <strong>sandwichs libanais</strong> et les{' '}
+                  <strong>pizzas artisanales</strong>, nous mettons un point d'honneur à utiliser uniquement des
+                  ingrédients frais et de qualité supérieure.
+                </p>
+                <p>
+                  Chaque plat est préparé avec passion et savoir-faire, dans le respect des traditions culinaires
+                  libanaises et italiennes. Nos viandes sont sélectionnées avec soin, nos légumes sont frais du jour,
+                  et nos sauces sont préparées maison selon nos recettes secrètes.
+                </p>
+                <p>
+                  Chez Number One, la qualité n'est pas négociable. Nous croyons que chaque client mérite le meilleur,
+                  c'est pourquoi nous ne faisons aucun compromis sur la fraîcheur de nos produits et l'excellence de
+                  notre service.
+                </p>
+              </div>
+              <div className="about-features">
+                <div className="about-feature">
+                  <div className="feature-icon">🍽️</div>
+                  <h3>Ingrédients frais</h3>
+                  <p>Produits sélectionnés quotidiennement pour garantir fraîcheur et qualité</p>
+                </div>
+                <div className="about-feature">
+                  <div className="feature-icon">👨‍🍳</div>
+                  <h3>Préparation artisanale</h3>
+                  <p>Chaque plat est préparé à la commande avec passion et expertise</p>
+                </div>
+                <div className="about-feature">
+                  <div className="feature-icon">⭐</div>
+                  <h3>Excellence garantie</h3>
+                  <p>Un engagement inébranlable envers la qualité et la satisfaction client</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       {showOrderPanel || cartLines.length > 0 ? (
@@ -325,24 +441,38 @@ function App() {
               <p className="muted">Ajoutez vos plats pour commencer.</p>
             ) : (
               <ul className="cart-list">
-                {cartLines.map(({ item, quantity, lineTotal }) => (
-                  <li key={item.id} className="cart-line">
-                    <div>
-                      <p className="cart-title">{item.name}</p>
-                      <p className="muted">{formatPrice(item.price)} / unité</p>
-                    </div>
-                    <div className="cart-actions">
-                      <button className="circle-btn" onClick={() => updateQuantity(item.id, -1)}>
-                        –
-                      </button>
-                      <span className="qty">{quantity}</span>
-                      <button className="circle-btn" onClick={() => updateQuantity(item.id, 1)}>
-                        +
-                      </button>
-                      <span className="line-total">{formatPrice(lineTotal)}</span>
-                    </div>
-                  </li>
-                ))}
+                {cartLines.map(({ item, quantity, lineTotal, options }) => {
+                  const extras = []
+                  if (options.sauce) extras.push('Sauce')
+                  if (options.fries) extras.push('Frites')
+                  return (
+                    <li key={item.id} className="cart-line">
+                      <div>
+                        <p className="cart-title">{item.name}</p>
+                        <p className="muted">{formatPrice(item.price)} / unité</p>
+                        {extras.length > 0 && (
+                          <p className="cart-options">
+                            {extras.map((extra, idx) => (
+                              <span key={idx} className="option-badge">
+                                {extra}
+                              </span>
+                            ))}
+                          </p>
+                        )}
+                      </div>
+                      <div className="cart-actions">
+                        <button className="circle-btn" onClick={() => updateQuantity(item.id, -1)}>
+                          –
+                        </button>
+                        <span className="qty">{quantity}</span>
+                        <button className="circle-btn" onClick={() => updateQuantity(item.id, 1)}>
+                          +
+                        </button>
+                        <span className="line-total">{formatPrice(lineTotal)}</span>
+                      </div>
+                    </li>
+                  )
+                })}
               </ul>
             )}
 
@@ -405,6 +535,60 @@ function App() {
           </aside>
         </section>
       ) : null}
+
+      {optionsModal && optionsModal.item && (
+        <div className="options-modal-overlay" onClick={() => setOptionsModal(null)}>
+          <div className="options-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="options-modal-header">
+              <h3>{optionsModal.item.name}</h3>
+              <button className="close-btn" onClick={() => setOptionsModal(null)}>
+                ×
+              </button>
+            </div>
+            <div className="options-modal-content">
+              <p className="options-modal-price">{formatPrice(optionsModal.item.price)}</p>
+              <div className="options-list">
+                <label className="option-toggle">
+                  <input
+                    type="checkbox"
+                    checked={optionsModal.options.sauce}
+                    onChange={(e) =>
+                      setOptionsModal({
+                        ...optionsModal,
+                        options: { ...optionsModal.options, sauce: e.target.checked },
+                      })
+                    }
+                  />
+                  <span className="toggle-slider"></span>
+                  <span className="option-label">Sauce</span>
+                </label>
+                <label className="option-toggle">
+                  <input
+                    type="checkbox"
+                    checked={optionsModal.options.fries}
+                    onChange={(e) =>
+                      setOptionsModal({
+                        ...optionsModal,
+                        options: { ...optionsModal.options, fries: e.target.checked },
+                      })
+                    }
+                  />
+                  <span className="toggle-slider"></span>
+                  <span className="option-label">Frites</span>
+                </label>
+              </div>
+            </div>
+            <div className="options-modal-footer">
+              <button className="ghost-btn" onClick={() => setOptionsModal(null)}>
+                Annuler
+              </button>
+              <button className="primary-btn" onClick={confirmAddToCart}>
+                Ajouter au panier
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
     </>
   )
