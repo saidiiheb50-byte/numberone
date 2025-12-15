@@ -1,18 +1,13 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  padding: 24px;
-  max-width: 1200px;
-  margin: 0 auto 48px;
+  gap: 0;
+  padding: 0;
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
   position: relative;
   z-index: 1;
-}
-
-@media (max-width: 1080px) {
-  .page {
-    padding: 20px;
-  }
 }
 
 /* Mobile Responsive Styles */
@@ -23,11 +18,12 @@
   }
 
   .topbar {
-    padding: 10px 12px;
+    padding: 12px 16px;
     flex-wrap: wrap;
     gap: 8px;
-    top: 8px;
-    border-radius: 12px;
+    top: 0;
+    border-radius: 0;
+    width: 100%;
   }
 
   .brand {
@@ -60,9 +56,9 @@
   }
 
   .hero {
-    padding: 20px;
-    border-radius: 16px;
-    margin-top: 4px;
+    padding: 20px 16px;
+    border-radius: 0;
+    margin-top: 0;
   }
 
   .hero-visual-content {
@@ -347,7 +343,7 @@
   }
 
   .hero {
-    padding: 16px;
+    padding: 16px 12px;
   }
 
   .hero h1 {
@@ -396,14 +392,17 @@
   align-items: center;
   justify-content: space-between;
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 14px 18px;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0;
+  padding: 16px 24px;
   backdrop-filter: blur(12px);
   position: sticky;
-  top: 16px;
+  top: 0;
   z-index: 10;
-  box-shadow: var(--shadow);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  margin: 0;
 }
 
 .brand {
@@ -448,22 +447,23 @@
 .hero {
   position: relative;
   overflow: hidden;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0;
+  border: none;
   background: linear-gradient(135deg, rgba(249, 115, 22, 0.12), rgba(37, 99, 235, 0.14)),
     radial-gradient(120% 120% at 20% 20%, #1b2640 0%, #0f172a 35%, #0b0f1a 80%);
-  padding: 24px;
+  padding: 32px 24px;
   color: #f8fafc;
   display: flex;
   flex-direction: column;
   gap: 18px;
-  margin-top: 8px;
-  box-shadow: var(--shadow);
+  margin: 0;
+  box-shadow: none;
+  width: 100%;
 }
 
 @media (max-width: 960px) {
   .hero {
-    padding: 20px;
+    padding: 24px 16px;
   }
 }
 
@@ -498,6 +498,14 @@
   object-fit: cover;
   display: block;
   transform: scale(1.02);
+  image-rendering: auto;
+  image-rendering: -webkit-optimize-contrast;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
+  filter: contrast(1.05) saturate(1.1);
 }
 
 .hero-visual-overlay {
@@ -645,10 +653,18 @@
 }
 
 .menu {
-  margin-top: 28px;
+  margin: 0;
+  padding: 32px 24px;
   display: flex;
   flex-direction: column;
   gap: 28px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .menu {
+    padding: 24px 16px;
+  }
 }
 
 .menu-header {
@@ -696,10 +712,10 @@
 
 .category-hero-card {
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
+  border: none;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease, border-color 0.4s ease;
   cursor: pointer;
 }
@@ -1164,20 +1180,22 @@
 }
 
 .about-section {
-  margin-top: 48px;
-  padding: 48px 0;
+  margin: 0;
+  padding: 48px 24px;
   background: linear-gradient(180deg, transparent 0%, rgba(249, 115, 22, 0.05) 50%, transparent 100%);
+  width: 100%;
 }
 
 .about-container {
-  max-width: 1000px;
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 0;
+  width: 100%;
 }
 
 .about-content {
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 24px;
+  border: none;
+  border-radius: 0;
   padding: 40px;
   box-shadow: var(--shadow);
   animation: fadeInUp 0.8s ease-out;
@@ -1386,17 +1404,31 @@
 }
 
 .order-section {
-  margin-top: 12px;
+  margin: 0;
+  padding: 24px;
+  width: 100%;
 }
 
 .order-panel {
-  border-radius: 18px;
-  padding: 18px;
+  border-radius: 0;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 14px;
-  box-shadow: var(--shadow);
+  box-shadow: none;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .order-section {
+    padding: 16px;
+  }
+  
+  .order-panel {
+    padding: 20px;
+  }
 }
 
 /* À emporter (Pickup) Theme - Golden/Orange */

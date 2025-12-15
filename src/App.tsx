@@ -319,7 +319,8 @@ function App() {
             <img
               src="/pizza.jpg"
               alt="Grande pizza artisanale"
-              loading="lazy"
+              loading="eager"
+              fetchPriority="high"
             />
             <div className="hero-visual-overlay" />
             <div className="hero-visual-content">
