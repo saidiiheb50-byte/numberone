@@ -548,11 +548,23 @@
   box-shadow: 0 10px 22px rgba(249, 115, 22, 0.25);
 }
 
-.hero-cta {
+.hero-cta-text {
   display: flex;
-  gap: 10px;
+  gap: 16px;
   flex-wrap: wrap;
-  margin-top: 10px;
+  margin-top: 12px;
+  align-items: center;
+}
+
+.hero-text-golden {
+  font-size: 15px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+  letter-spacing: 0.02em;
 }
 
 .primary-btn.subtle {
@@ -1254,6 +1266,77 @@
   line-height: 1.6;
 }
 
+.about-social {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+}
+
+.social-label {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.social-link {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+}
+
+.social-link.instagram {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: #fff;
+}
+
+.social-link.facebook {
+  background: #1877f2;
+  color: #fff;
+}
+
+.social-link.tiktok {
+  background: linear-gradient(135deg, #000000 0%, #ff0050 50%, #00f2ea 100%);
+  color: #fff;
+}
+
+.social-link:hover {
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.social-link.instagram:hover {
+  box-shadow: 0 8px 20px rgba(188, 24, 136, 0.4);
+}
+
+.social-link.facebook:hover {
+  box-shadow: 0 8px 20px rgba(24, 119, 242, 0.4);
+}
+
+.social-link.tiktok:hover {
+  box-shadow: 0 8px 20px rgba(255, 0, 80, 0.4);
+}
+
+.social-link svg {
+  width: 20px;
+  height: 20px;
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -1277,6 +1360,29 @@
   .about-features {
     grid-template-columns: 1fr;
   }
+
+  .about-social {
+    margin-top: 24px;
+    padding-top: 20px;
+  }
+
+  .social-link {
+    width: 36px;
+    height: 36px;
+  }
+
+  .social-link svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .cart-badge {
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+    top: -6px;
+    right: -6px;
+  }
 }
 
 .order-section {
@@ -1284,14 +1390,172 @@
 }
 
 .order-panel {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 18px;
   padding: 18px;
   display: flex;
   flex-direction: column;
   gap: 14px;
   box-shadow: var(--shadow);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* À emporter (Pickup) Theme - Golden/Orange */
+.order-panel-pickup {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.12), rgba(251, 191, 36, 0.08));
+  border: 1px solid rgba(249, 115, 22, 0.25);
+  box-shadow: 0 20px 60px rgba(249, 115, 22, 0.15), var(--shadow);
+}
+
+.order-panel-pickup .panel-header {
+  border-bottom: 1px solid rgba(249, 115, 22, 0.2);
+  padding-bottom: 12px;
+  margin-bottom: 4px;
+}
+
+.order-panel-pickup .eyebrow {
+  color: #fbbf24;
+}
+
+.order-panel-pickup .panel-header h3 {
+  color: #f8fafc;
+  background: linear-gradient(135deg, #fbbf24, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.order-panel-pickup .chip.active {
+  background: linear-gradient(135deg, #f97316, #f59e0b);
+  border-color: #f97316;
+  color: #0b0f1a;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+}
+
+.order-panel-pickup .chip:not(.active) {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(249, 115, 22, 0.2);
+  color: #cdd5e4;
+}
+
+.order-panel-pickup .total-row {
+  background: rgba(249, 115, 22, 0.1);
+  border-color: rgba(249, 115, 22, 0.3);
+}
+
+.order-panel-pickup .total-row strong {
+  color: #fbbf24;
+}
+
+.order-panel-pickup .cart-line {
+  background: rgba(249, 115, 22, 0.06);
+  border-color: rgba(249, 115, 22, 0.15);
+}
+
+.order-panel-pickup .primary-btn {
+  background: linear-gradient(135deg, #f97316, #f59e0b);
+  box-shadow: 0 12px 25px rgba(249, 115, 22, 0.35);
+}
+
+.order-panel-pickup .primary-btn:hover {
+  box-shadow: 0 16px 30px rgba(249, 115, 22, 0.45);
+}
+
+/* Livraison (Delivery) Theme - Blue/Cyan */
+.order-panel-delivery {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(59, 130, 246, 0.08));
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  box-shadow: 0 20px 60px rgba(37, 99, 235, 0.15), var(--shadow);
+}
+
+.order-panel-delivery .panel-header {
+  border-bottom: 1px solid rgba(37, 99, 235, 0.2);
+  padding-bottom: 12px;
+  margin-bottom: 4px;
+}
+
+.order-panel-delivery .eyebrow {
+  color: #60a5fa;
+}
+
+.order-panel-delivery .panel-header h3 {
+  color: #f8fafc;
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.order-panel-delivery .chip.active {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border-color: #3b82f6;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.order-panel-delivery .chip:not(.active) {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(37, 99, 235, 0.2);
+  color: #cdd5e4;
+}
+
+.order-panel-delivery .total-row {
+  background: rgba(37, 99, 235, 0.1);
+  border-color: rgba(37, 99, 235, 0.3);
+}
+
+.order-panel-delivery .total-row strong {
+  color: #60a5fa;
+}
+
+.order-panel-delivery .cart-line {
+  background: rgba(37, 99, 235, 0.06);
+  border-color: rgba(37, 99, 235, 0.15);
+}
+
+.order-panel-delivery .primary-btn {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  box-shadow: 0 12px 25px rgba(37, 99, 235, 0.35);
+}
+
+.order-panel-delivery .primary-btn:hover {
+  box-shadow: 0 16px 30px rgba(37, 99, 235, 0.45);
+}
+
+/* Form inputs theme styling */
+.order-panel-pickup input:focus,
+.order-panel-pickup textarea:focus {
+  border-color: rgba(249, 115, 22, 0.5);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.order-panel-delivery input:focus,
+.order-panel-delivery textarea:focus {
+  border-color: rgba(37, 99, 235, 0.5);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.order-panel-pickup .count-badge {
+  background: rgba(249, 115, 22, 0.15);
+  border-color: rgba(249, 115, 22, 0.3);
+  color: #fbbf24;
+}
+
+.order-panel-delivery .count-badge {
+  background: rgba(37, 99, 235, 0.15);
+  border-color: rgba(37, 99, 235, 0.3);
+  color: #60a5fa;
+}
+
+.order-panel-pickup .option-badge {
+  background: rgba(249, 115, 22, 0.2);
+  border-color: rgba(249, 115, 22, 0.4);
+  color: #fbbf24;
+}
+
+.order-panel-delivery .option-badge {
+  background: rgba(37, 99, 235, 0.2);
+  border-color: rgba(37, 99, 235, 0.4);
+  color: #60a5fa;
 }
 
 .panel-header {
@@ -1466,6 +1730,41 @@ textarea {
 .primary-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.cart-btn {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ef4444;
+  color: #fff;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  border: 2px solid #0b0f1a;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+  animation: pulse 0.3s ease;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .ghost-btn {
@@ -1762,4 +2061,146 @@ textarea {
   font-size: 11px;
   color: #fbbf24;
   font-weight: 500;
+}
+
+.thank-you-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  animation: fadeIn 0.3s ease;
+}
+
+.thank-you-card {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+  animation: thankYouSlideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  position: relative;
+}
+
+@keyframes thankYouSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.thank-you-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.thank-you-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.thank-you-image {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  position: relative;
+}
+
+.thank-you-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.thank-you-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4));
+}
+
+.thank-you-content {
+  padding: 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.thank-you-content h2 {
+  margin: 0;
+  font-size: 28px;
+  background: linear-gradient(135deg, #fbbf24, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+.thank-you-content p {
+  margin: 0;
+  color: #cdd5e1;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.thank-you-subtitle {
+  color: #9ca3af !important;
+  font-size: 14px !important;
+  margin-top: 4px !important;
+}
+
+.thank-you-card .primary-btn {
+  margin: 8px 32px 32px;
+  width: auto;
+}
+
+@media (max-width: 768px) {
+  .thank-you-card {
+    width: 95%;
+    max-width: none;
+    border-radius: 20px;
+  }
+
+  .thank-you-image {
+    height: 180px;
+  }
+
+  .thank-you-content {
+    padding: 24px;
+  }
+
+  .thank-you-content h2 {
+    font-size: 24px;
+  }
+
+  .thank-you-content p {
+    font-size: 15px;
+  }
 }

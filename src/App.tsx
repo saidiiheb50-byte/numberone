@@ -15,7 +15,7 @@ type CartItem = {
 type CartState = Record<string, CartItem>
 type ServiceType = 'pickup' | 'delivery'
 
-const restaurantPhone = '+21650123456'
+const restaurantPhone = '+21692883677'
 
 const formatPrice = (value: number) =>
   new Intl.NumberFormat('fr-TN', {
@@ -33,12 +33,14 @@ function App() {
   const [customer, setCustomer] = useState({
     name: '',
     phone: '',
+    address: '',
     note: '',
   })
   const [optionsModal, setOptionsModal] = useState<{
     item: MenuItem | null
     options: CartItemOptions
   } | null>(null)
+  const [showThankYou, setShowThankYou] = useState(false)
   const orderPanelRef = useRef<HTMLDivElement | null>(null)
 
   const cartLines = useMemo(
@@ -58,6 +60,7 @@ function App() {
   )
 
   const total = cartLines.reduce((sum, line) => sum + line.lineTotal, 0)
+  const totalQuantity = cartLines.reduce((sum, line) => sum + line.quantity, 0)
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 5000)
@@ -148,12 +151,13 @@ function App() {
       })
       .join('\n')
 
-    const header = `Nouvelle commande Number One`
+    const header = `🍕 Nouvelle commande Number One 🍕`
     const info = [
-      customer.name ? `Client: ${customer.name}` : '',
-      customer.phone ? `Téléphone: ${customer.phone}` : '',
-      `Service: ${serviceType === 'pickup' ? 'A emporter' : 'Livraison'}`,
-      customer.note ? `Note: ${customer.note}` : '',
+      `👤 Client: ${customer.name || 'Non renseigné'}`,
+      `📞 Téléphone: ${customer.phone || 'Non renseigné'}`,
+      `📍 Adresse: ${customer.address || (serviceType === 'pickup' ? 'À emporter' : 'Non renseignée')}`,
+      `🚚 Service: ${serviceType === 'pickup' ? 'À emporter' : 'Livraison'}`,
+      customer.note ? `📝 Note: ${customer.note}` : '',
     ]
       .filter(Boolean)
       .join('\n')
@@ -164,6 +168,18 @@ function App() {
     const url = `https://wa.me/${restaurantPhone.replace(/\D/g, '')}?text=${message}`
 
     window.open(url, '_blank')
+    
+    // Show thank you card and clear cart after a short delay
+    setTimeout(() => {
+      setShowThankYou(true)
+      setCart({})
+      setCustomer({
+        name: '',
+        phone: '',
+        address: '',
+        note: '',
+      })
+    }, 500)
   }
 
   const scrollToMenu = () => {
@@ -288,8 +304,11 @@ function App() {
           <button className="ghost-btn" onClick={() => (window.location.href = `tel:${restaurantPhone}`)}>
             Appeler
           </button>
-          <button className="primary-btn" onClick={scrollToMenu}>
+          <button className="primary-btn cart-btn" onClick={scrollToMenu}>
             Commander
+            {totalQuantity > 0 && (
+              <span className="cart-badge">{totalQuantity}</span>
+            )}
           </button>
         </div>
       </header>
@@ -310,9 +329,9 @@ function App() {
               <div>
                 <p className="eyebrow">Number One</p>
                 <h3>Pizza & Sandwich Libanais</h3>
-                <div className="hero-cta">
-                  <button className="primary-btn subtle">Bienvenue chez Number One</button>
-                  <button className="ghost-btn light">Panier prêt</button>
+                <div className="hero-cta-text">
+                  <span className="hero-text-golden">Bienvenue chez Number One</span>
+                  <span className="hero-text-golden">Panier prêt</span>
                 </div>
               </div>
             </div>
@@ -421,6 +440,44 @@ function App() {
                   <p>Un engagement inébranlable envers la qualité et la satisfaction client</p>
                 </div>
               </div>
+              <div className="about-social">
+                <p className="social-label">Suivez-nous</p>
+                <div className="social-links">
+                  <a
+                    href="https://www.instagram.com/number_one_officiel/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-link instagram"
+                    aria-label="Instagram"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                  </a>
+                  <a
+                    href="https://www.facebook.com/profile.php?id=100062974282274"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-link facebook"
+                    aria-label="Facebook"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                  </a>
+                  <a
+                    href="https://www.tiktok.com/@numberoneofficiel"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-link tiktok"
+                    aria-label="TikTok"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                    </svg>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -428,7 +485,7 @@ function App() {
 
       {showOrderPanel || cartLines.length > 0 ? (
         <section className="order-section" ref={orderPanelRef}>
-          <aside className="order-panel">
+          <aside className={`order-panel order-panel-${serviceType}`}>
             <div className="panel-header">
               <div>
                 <p className="eyebrow">Panier</p>
@@ -498,27 +555,39 @@ function App() {
 
             <div className="form">
               <label>
-                Nom / Prénom
+                Nom / Prénom *
                 <input
                   type="text"
-                  placeholder="Votre nom"
+                  placeholder="Votre nom complet"
                   value={customer.name}
                   onChange={(e) => setCustomer((prev) => ({ ...prev, name: e.target.value }))}
+                  required
                 />
               </label>
               <label>
-                Téléphone
+                Téléphone *
                 <input
                   type="tel"
                   placeholder="+216 ..."
                   value={customer.phone}
                   onChange={(e) => setCustomer((prev) => ({ ...prev, phone: e.target.value }))}
+                  required
                 />
               </label>
               <label>
-                Note (adresse, sauce, etc.)
+                Adresse {serviceType === 'delivery' && '*'}
+                <input
+                  type="text"
+                  placeholder={serviceType === 'delivery' ? 'Votre adresse complète' : 'Adresse (optionnel)'}
+                  value={customer.address}
+                  onChange={(e) => setCustomer((prev) => ({ ...prev, address: e.target.value }))}
+                  required={serviceType === 'delivery'}
+                />
+              </label>
+              <label>
+                Note (étage, instructions, etc.)
                 <textarea
-                  placeholder="Ajoutez une précision (étage, extra fromage...)"
+                  placeholder="Ajoutez une précision (étage, extra fromage, instructions de livraison...)"
                   value={customer.note}
                   onChange={(e) => setCustomer((prev) => ({ ...prev, note: e.target.value }))}
                 />
@@ -527,7 +596,12 @@ function App() {
 
             <button
               className="primary-btn full-width"
-              disabled={cartLines.length === 0}
+              disabled={
+                cartLines.length === 0 ||
+                !customer.name.trim() ||
+                !customer.phone.trim() ||
+                (serviceType === 'delivery' && !customer.address.trim())
+              }
               onClick={handleSendOrder}
             >
               Envoyer la commande via WhatsApp
@@ -586,6 +660,27 @@ function App() {
                 Ajouter au panier
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showThankYou && (
+        <div className="thank-you-overlay" onClick={() => setShowThankYou(false)}>
+          <div className="thank-you-card" onClick={(e) => e.stopPropagation()}>
+            <button className="thank-you-close" onClick={() => setShowThankYou(false)}>
+              ×
+            </button>
+            <div className="thank-you-image">
+              <img src="/pizza.jpg" alt="Pizza" />
+            </div>
+            <div className="thank-you-content">
+              <h2>Merci pour votre commande !</h2>
+              <p>Votre commande est en préparation, attendez un peu 😊</p>
+              <p className="thank-you-subtitle">Nous vous contacterons bientôt sur WhatsApp</p>
+            </div>
+            <button className="primary-btn" onClick={() => setShowThankYou(false)}>
+              Parfait !
+            </button>
           </div>
         </div>
       )}
