@@ -329,49 +329,11 @@ function App() {
               </div>
               <div>
                 <p className="eyebrow">Number One</p>
-                <h3>Pizza & Sandwich Libanais</h3>
+                <h3>Restaurant & pizzeria</h3>
                 <div className="hero-cta-text">
                   <span className="hero-text-golden">Bienvenue chez Number One</span>
                   <span className="hero-text-golden">Panier prêt</span>
                 </div>
-              </div>
-            </div>
-          </div>
-          <div className="hero-content">
-            <p className="eyebrow">Bienvenue chez Number One</p>
-            <h1>Sandwich Libanais & Pizza, prêts pour votre commande</h1>
-            <p className="lead">
-              Une carte courte, des produits frais, une équipe rapide. Choisissez vos favoris,
-              ajoutez au panier et finalisez par téléphone ou WhatsApp.
-            </p>
-            <div className="hero-actions">
-              <button className="primary-btn" onClick={scrollToMenu}>
-                Voir le menu
-              </button>
-              <button
-                className="ghost-btn"
-                onClick={() => window.open(`https://wa.me/${restaurantPhone.replace(/\D/g, '')}`, '_blank')}
-              >
-                WhatsApp
-              </button>
-            </div>
-            <div className="hero-tags">
-              <span className="pill">Livraison rapide</span>
-              <span className="pill">Paiement à la livraison</span>
-              <span className="pill">Halal friendly</span>
-            </div>
-            <div className="hero-stats">
-              <div>
-                <strong>24/7</strong>
-                <span>Service continu</span>
-              </div>
-              <div>
-                <strong>15 min</strong>
-                <span>Moyenne préparation</span>
-              </div>
-              <div>
-                <strong>+50k</strong>
-                <span>Clients servis</span>
               </div>
             </div>
           </div>
